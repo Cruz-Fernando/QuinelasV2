@@ -99,6 +99,24 @@ class InterfazPredicciones:
         ttk.Label(frame_botones, text="Selecciona qué consultar:", 
                  style='Title.TLabel').pack(pady=10)
         
+        # === BÚSQUEDA DE JUGADOR POR ID ===
+        search_frame = ttk.Frame(frame_botones)
+        search_frame.pack(pady=10)
+        
+        ttk.Label(search_frame, text="🔍 Buscar Jugador por ID:", 
+                 font=('Arial', 10, 'bold')).grid(row=0, column=0, columnspan=3, sticky='w', pady=5)
+        
+        ttk.Label(search_frame, text="ID:").grid(row=1, column=0, padx=(0, 5))
+        self.entry_buscar_id = ttk.Entry(search_frame, width=10)
+        self.entry_buscar_id.grid(row=1, column=1, padx=5)
+        
+        tk.Button(search_frame, text="🔍 Buscar", command=self.buscar_jugador_por_id,
+                 font=('Arial', 9), bg='#c53030', fg='white',
+                 width=10, cursor='hand2').grid(row=1, column=2, padx=5)
+        
+        ttk.Separator(frame_botones, orient='horizontal').pack(fill='x', pady=10)
+        # === FIN BÚSQUEDA ===
+        
         consultas = [
             ("📅 Ver Temporadas", self.ver_temporadas),
             ("🏟️ Ver Clubes", self.ver_clubes),
@@ -124,7 +142,7 @@ class InterfazPredicciones:
                                                           height=25,
                                                           font=('Courier', 10))
         self.texto_resultados.pack(padx=10, pady=5, fill='both', expand=True)
-    
+
     # ==================== VENTANAS DE INSERCIÓN ====================
     
     def ventana_temporada(self):
@@ -863,6 +881,48 @@ class InterfazPredicciones:
                 self.texto_resultados.insert(tk.END, f"Pie Dominante: {jugador['pie_dominante'] or 'N/A'}\n")
                 self.texto_resultados.insert(tk.END, f"Peso Influencia: {jugador['peso_influencia']}\n")
                 self.texto_resultados.insert(tk.END, "-"*80 + "\n\n")
+        except Exception as e:
+            self.texto_resultados.delete('1.0', tk.END)
+            self.texto_resultados.insert(tk.END, f"Error: {str(e)}")
+    
+
+    def buscar_jugador_por_id(self):
+        """Busca un jugador específico por su ID"""
+        try:
+            id_buscar = self.entry_buscar_id.get().strip()
+            
+            if not id_buscar:
+                messagebox.showwarning("Advertencia", "Por favor ingresa un ID de jugador")
+                return
+            
+            try:
+                id_buscar = int(id_buscar)
+            except ValueError:
+                messagebox.showerror("Error", "El ID debe ser un número entero")
+                return
+            
+            jugadores = self.db.obtener_jugadores()
+            jugador = next((j for j in jugadores if j['id_jugador'] == id_buscar), None)
+            
+            self.texto_resultados.delete('1.0', tk.END)
+            
+            if not jugador:
+                self.texto_resultados.insert(tk.END, f"❌ No se encontró ningún jugador con ID: {id_buscar}\n\n")
+                self.texto_resultados.insert(tk.END, "Verifica que el ID sea correcto e intenta nuevamente.")
+                return
+            
+            # Mostrar jugador encontrado
+            self.texto_resultados.insert(tk.END, "✅ JUGADOR ENCONTRADO\n")
+            self.texto_resultados.insert(tk.END, "="*80 + "\n\n")
+            
+            self.texto_resultados.insert(tk.END, f"🆔 ID: {jugador['id_jugador']}\n")
+            self.texto_resultados.insert(tk.END, f"👤 Nombre Completo: {jugador['nombre']} {jugador['apellidos']}\n")
+            self.texto_resultados.insert(tk.END, f"📅 Fecha Nacimiento: {jugador['fecha_nacimiento']}\n")
+            self.texto_resultados.insert(tk.END, f"⚽ Posición: {jugador['posicion_principal'] or 'N/A'}\n")
+            self.texto_resultados.insert(tk.END, f"🦶 Pie Dominante: {jugador['pie_dominante'] or 'N/A'}\n")
+            self.texto_resultados.insert(tk.END, f"⭐ Peso Influencia: {jugador['peso_influencia']}\n")
+            self.texto_resultados.insert(tk.END, "\n" + "="*80 + "\n")
+            
         except Exception as e:
             self.texto_resultados.delete('1.0', tk.END)
             self.texto_resultados.insert(tk.END, f"Error: {str(e)}")
