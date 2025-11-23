@@ -70,6 +70,9 @@ El sistema es completamente funcional y permite:
 
 ---
 **Estudiantes:**
+---
 **Miguel Romero**
+---
 **Jhojan Fernando Cruz Bulla**
+---
 *Desarrollado para el Proyecto de Bases de Datos - Parcial 2*
