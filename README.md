@@ -69,4 +69,7 @@ El sistema es completamente funcional y permite:
 - ✅ Seguimiento del estado físico/emocional de los jugadores (Biorritmos).
 
 ---
-*Desarrollado para el Proyecto de Bases de Datos - QuinelasV2*
+**Estudiantes:**
+**Miguel Romero**
+**Jhojan Fernando Cruz Bulla**
+*Desarrollado para el Proyecto de Bases de Datos - Parcial 2*
